@@ -1,4 +1,4 @@
-import 'package:coffe_inventory/login.dart';
+import 'package:coffe_inventory/auth/login.dart';
 import 'package:flutter/material.dart';
 
 class Onboarding extends StatelessWidget {

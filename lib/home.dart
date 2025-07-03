@@ -1,9 +1,19 @@
 import 'package:coffe_inventory/menu_widget.dart';
+import 'package:coffe_inventory/product/screen/list_product_screen.dart';
+import 'package:coffe_inventory/product/screen/product_screen.dart';
+import 'package:coffe_inventory/product/screen/stock_inout_screen.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+import 'product/screen/report_screen.dart';
 
+class HomeScreen extends StatefulWidget {
+  HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,13 +38,21 @@ class HomeScreen extends StatelessWidget {
               MenuWidget(
                 title: 'Stock In/Out',
                 onPressed: () {
-                  // Navigate to Stock In/Out screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => StockInOutScreen()),
+                  );
                 },
               ),
               MenuWidget(
-                title: 'Sales Report',
+                title: 'List Produk',
                 onPressed: () {
-                  // Navigate to Sales Report screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductListScreen(),
+                    ),
+                  );
                 },
               ),
               MenuWidget(
@@ -46,7 +64,12 @@ class HomeScreen extends StatelessWidget {
               MenuWidget(
                 title: 'Laporan',
                 onPressed: () {
-                  // Navigate to Settings screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StockReportScreen(),
+                    ),
+                  );
                 },
               ),
               Padding(
@@ -64,7 +87,14 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddProductScreen(),
+                        ),
+                      );
+                    },
                     child: Text(
                       'Tambah Produk',
                       style: TextStyle(
