@@ -59,14 +59,12 @@ class _StockReportScreenState extends State<StockReportScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Laporan Stok'),
-        backgroundColor: Colors.brown[700],
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadStockReport, // Tombol refresh laporan
-            tooltip: 'Refresh Laporan',
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: _isLoadingReport
           ? const Center(child: CircularProgressIndicator(color: Colors.brown))

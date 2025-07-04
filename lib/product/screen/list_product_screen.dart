@@ -1,9 +1,13 @@
-import 'package:coffe_inventory/auth/auth_service.dart';
-import 'package:coffe_inventory/auth/login.dart';
-import 'package:coffe_inventory/product/model/product_model.dart';
+// lib/screens/product_list_screen.dart
+
+import 'package:coffe_inventory/auth/login.dart' show LoginScreen;
+import 'package:coffe_inventory/product/screen/detail_product_screen.dart';
 import 'package:coffe_inventory/product/screen/product_screen.dart';
-import 'package:coffe_inventory/product/service/product_service.dart';
 import 'package:flutter/material.dart';
+
+import '../../auth/auth_service.dart';
+import '../model/product_model.dart';
+import '../service/product_service.dart'; // Impor ProductDetailScreen
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
@@ -17,20 +21,20 @@ class _ProductListScreenState extends State<ProductListScreen> {
   final ApiService _apiService = ApiService();
   final AuthService _authService = AuthService();
 
-  bool _isLoadingProducts = true; // State untuk loading produk
-  String? _errorMessage; // State untuk pesan error
+  bool _isLoadingProducts = true;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _loadProducts(); // Muat produk saat screen pertama kali dibuat
+    _loadProducts();
   }
 
   Future<void> _loadProducts() async {
     if (mounted) {
       setState(() {
         _isLoadingProducts = true;
-        _errorMessage = null; // Reset error message
+        _errorMessage = null;
       });
     }
 
@@ -44,10 +48,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString(); // Simpan pesan error
-          // Jika error adalah Unauthorized, mungkin perlu redirect ke login
+          _errorMessage = e.toString();
           if (e.toString().contains('Unauthorized')) {
-            _logoutAndNavigateToLogin(); // Panggil logout jika token tidak valid
+            _logoutAndNavigateToLogin();
           }
         });
       }
@@ -64,10 +67,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
     await _authService.logout();
     if (mounted) {
       Navigator.pushAndRemoveUntil(
-        // Gunakan pushAndRemoveUntil untuk membersihkan stack
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
-        (Route<dynamic> route) => false, // Hapus semua route sebelumnya
+        (Route<dynamic> route) => false,
       );
     }
   }
@@ -77,14 +79,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daftar Produk'),
-        backgroundColor: Colors.brown[700],
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadProducts, // Tombol refresh
-            tooltip: 'Refresh Produk',
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: _isLoadingProducts
           ? const Center(child: CircularProgressIndicator(color: Colors.brown))
@@ -95,17 +95,21 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, color: Colors.red, size: 50),
-                    SizedBox(height: 10),
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 50,
+                    ),
+                    const SizedBox(height: 10),
                     Text(
                       'Error: $_errorMessage',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.red, fontSize: 16),
+                      style: const TextStyle(color: Colors.red, fontSize: 16),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _loadProducts,
-                      child: Text('Coba Lagi'),
+                      child: const Text('Coba Lagi'),
                     ),
                   ],
                 ),
@@ -130,65 +134,111 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       child: Card(
                         elevation: 3,
                         child: InkWell(
-                          onTap: () {
-                            print('Tapped on ${product.nama}');
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                product.imageUrl != null &&
-                                        product.imageUrl!.isNotEmpty
-                                    ? CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          product.imageUrl!,
-                                        ),
-                                        radius: 30,
-                                      )
-                                    : const CircleAvatar(
-                                        backgroundColor: Colors.brown,
-                                        radius: 30,
-                                        child: Icon(
-                                          Icons.local_cafe,
-                                          color: Colors.white,
-                                        ),
+                          onTap: () async {
+                            // Navigasi ke ProductDetailScreen dan tunggu hasilnya
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ProductDetailScreen(product: product),
+                              ),
+                            );
+
+                            // Tangani hasil dari ProductDetailScreen
+                            if (result != null) {
+                              if (result is Product) {
+                                // Jika produk diperbarui, perbarui di daftar lokal
+                                final index = _products.indexWhere(
+                                  (p) => p.id == result.id,
+                                );
+                                if (index != -1) {
+                                  if (mounted) {
+                                    setState(() {
+                                      _products[index] = result;
+                                    });
+                                  }
+                                }
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Produk "${result.nama}" berhasil diperbarui!',
                                       ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  product.nama,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
+                                    ),
+                                  );
+                                }
+                              } else if (result is bool && result == true) {
+                                // Jika produk dihapus, muat ulang daftar produk
+                                await _loadProducts();
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Produk berhasil dihapus!'),
+                                    ),
+                                  );
+                                }
+                              }
+                            }
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              product.imageUrl != null &&
+                                      product.imageUrl!.isNotEmpty
+                                  ? Image.network(
+                                      product.imageUrl!,
+                                      fit: BoxFit.fill,
+                                      scale: 1,
+                                    )
+                                  : const CircleAvatar(
+                                      backgroundColor: Colors.brown,
+                                      radius: 30,
+                                      child: Icon(
+                                        Icons.local_cafe,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                              const SizedBox(height: 8),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      product.nama,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    CustomRow(
+                                      title: 'Kode:',
+                                      product: product.kode,
+                                    ),
+                                    CustomRow(
+                                      title: 'Kategori:',
+                                      product: product.kategori ?? 'N/A',
+                                    ),
+                                    CustomRow(
+                                      title: 'Satuan:',
+                                      product: product.satuan ?? 'N/A',
+                                    ),
+                                    CustomRow(
+                                      title: 'Stok',
+                                      product: product.stok.toString(),
+                                    ),
+                                    CustomRow(
+                                      title: 'Harga Beli',
+                                      product: product.harga_beli.toString(),
+                                    ),
+                                    CustomRow(
+                                      title: 'Harga Jual',
+                                      product: product.harga_jual.toString(),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Kode: ${product.kode}',
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                Text(
-                                  'Kategori: ${product.kategori ?? 'N/A'}',
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                Text(
-                                  'Satuan: ${product.satuan ?? 'N/A'}',
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                Text(
-                                  'Stok: ${product.stok}',
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                Text(
-                                  'Beli: \$${product.harga_beli.toStringAsFixed(2)}',
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                Text(
-                                  'Jual: \$${product.harga_jual.toStringAsFixed(2)}',
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -200,13 +250,17 @@ class _ProductListScreenState extends State<ProductListScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // Navigasi ke AddProductScreen
+          // Asumsi AddProductScreen ada di path ini
+          // coffe_inventory/product/screen/product_screen.dart (dari import)
+          // Jika tidak, ganti dengan path yang benar
           final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddProductScreen()),
+            MaterialPageRoute(
+              builder: (context) => const AddProductScreen(),
+            ), // Menggunakan AddProductScreen
           );
 
           if (result != null && result is Product) {
-            // Setelah menambah produk baru, muat ulang daftar produk di ProductListScreen
             await _loadProducts();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -222,6 +276,24 @@ class _ProductListScreenState extends State<ProductListScreen> {
         backgroundColor: Colors.brown,
         child: const Icon(Icons.add, color: Colors.white),
       ),
+    );
+  }
+}
+
+// Widget untuk menampilkan daftar produk
+class CustomRow extends StatelessWidget {
+  final String title;
+  final String product;
+  const CustomRow({super.key, required this.title, required this.product});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(title, style: const TextStyle(fontSize: 12)),
+        const Spacer(),
+        Text(product, style: const TextStyle(fontSize: 12)),
+      ],
     );
   }
 }

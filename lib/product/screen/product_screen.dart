@@ -113,7 +113,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Product'),
-        backgroundColor: Colors.brown[700], // Coffee-themed color
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ), // Coffee-themed color
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

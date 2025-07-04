@@ -2,6 +2,7 @@ import 'package:coffe_inventory/menu_widget.dart';
 import 'package:coffe_inventory/product/screen/list_product_screen.dart';
 import 'package:coffe_inventory/product/screen/product_screen.dart';
 import 'package:coffe_inventory/product/screen/stock_inout_screen.dart';
+import 'package:coffe_inventory/product/screen/stock_opname_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'product/screen/report_screen.dart';
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
           title: Text('Home', style: TextStyle(color: Colors.white)),
-          backgroundColor: Color(0xFF313131),
+          backgroundColor: Colors.brown,
           automaticallyImplyLeading: false,
         ),
       ),
@@ -58,7 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
               MenuWidget(
                 title: 'Stock Opname',
                 onPressed: () {
-                  // Navigate to Inventory Management screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StockOpnameScreen(),
+                    ),
+                  );
                 },
               ),
               MenuWidget(

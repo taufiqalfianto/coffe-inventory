@@ -241,16 +241,44 @@ class _StockInOutScreenState extends State<StockInOutScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Stock In/Out'),
-        backgroundColor: Colors.brown[700],
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.brown[200],
-          tabs: const [
-            Tab(text: 'In'),
-            Tab(text: 'Out'),
-          ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Container(
+            margin: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ), // Margin untuk TabBar
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                10.0,
+              ), // Sudut membulat untuk TabBar
+            ),
+            child: TabBar(
+              controller: _tabController,
+              labelColor: Colors.white,
+              unselectedLabelColor:
+                  Colors.brown, // Warna teks untuk tab tidak terpilih
+              indicatorSize: TabBarIndicatorSize
+                  .tab, // Membuat indicator mengisi seluruh tab
+              indicator: BoxDecoration(
+                color: Colors
+                    .brown[800], // Warna background untuk tab yang terpilih
+                borderRadius: BorderRadius.circular(
+                  20.0,
+                ), // Sudut membulat untuk tab yang terpilih
+              ),
+              tabs: const [
+                Tab(text: 'In'),
+                Tab(text: 'Out'),
+              ],
+            ),
+          ),
         ),
       ),
       body: TabBarView(
