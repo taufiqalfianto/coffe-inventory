@@ -17,19 +17,14 @@ class ApiService {
 
   ApiService._internal();
 
-  static const String _baseUrl =
-      'https://backend-inventory.izzalutfi.com/api'; // Ganti dengan URL dasar API Anda
-  final AuthService _authService =
-      AuthService(); // Dapatkan instance AuthService
+  static const String _baseUrl = 'https://backend-inventory.izzalutfi.com/api';
+  final AuthService _authService = AuthService();
 
   Future<Product?> addProduct(Product product) async {
-    // Selalu dapatkan token terbaru dari AuthService setiap kali melakukan request.
-    // Ini memastikan bahwa jika token diperbarui atau di-clear, ApiService akan menggunakan nilai yang paling baru.
     final String? token = _authService.authToken;
 
     if (token == null) {
       log('Authentication token is missing for addProduct.');
-      // Lempar exception agar UI bisa menangani, misalnya redirect ke LoginScreen
       throw Exception('Authentication required. Please log in again.');
     }
 
@@ -38,11 +33,9 @@ class ApiService {
     try {
       var request = http.MultipartRequest('POST', url);
 
-      request.headers['Authorization'] =
-          'Bearer $token'; // Gunakan token dari AuthService
+      request.headers['Authorization'] = 'Bearer $token';
       request.headers['Accept'] = 'application/json';
 
-      // Ensure all fields are non-null Strings
       request.fields['kode'] = product.kode;
       request.fields['nama'] = product.nama;
       request.fields['kategori'] = product.kategori!;
@@ -86,7 +79,7 @@ class ApiService {
       }
     } catch (e) {
       log('Error adding product: $e');
-      rethrow; // Biarkan UI menangani exception ini
+      rethrow;
     }
   }
 
@@ -139,7 +132,6 @@ class ApiService {
     }
   }
 
-  // --- Metode Baru: Melakukan Stock In ---
   Future<Map<String, dynamic>> stockIn(
     int productId,
     int quantity,
@@ -196,7 +188,6 @@ class ApiService {
     }
   }
 
-  // --- Metode Baru: Melakukan Stock Out ---
   Future<Map<String, dynamic>> stockOut(
     int productId,
     int quantity,
@@ -255,7 +246,6 @@ class ApiService {
     }
   }
 
-  // --- Metode Baru: Stock Report ---
   Future<List<StockReportItem>> getStockReport() async {
     final String? token = _authService.authToken;
 
@@ -364,43 +354,27 @@ class ApiService {
     }
   }
 
-  // --- Metode BARU: Memperbarui Produk ---
   Future<Product> updateProduct(Product product) async {
     final String? token = _authService.authToken;
 
     if (token == null) {
       throw Exception('Authentication required. Please log in again.');
     }
-
-    // Perhatikan: Endpoint UPDATE biasanya menggunakan ID produk di URL
-    // Asumsi: API Anda mendukung PUT /api/products/{id} atau POST dengan _method=PUT
-    // Berdasarkan gambar Screenshot 2025-07-04 at 23.05.49.png, Anda menggunakan POST dengan _method=PUT.
-    // Jika ID produk adalah bagian dari URL, ganti Uri.parse accordingly.
-    final url = Uri.parse(
-      '$_baseUrl/barangs/${product.id}',
-    ); // Menggunakan `barangs` sesuai screenshot terbaru
-    var request = http.MultipartRequest(
-      'POST',
-      url,
-    ); // Tetap POST karena ada _method=PUT
+    final url = Uri.parse('$_baseUrl/barangs/${product.id}');
+    var request = http.MultipartRequest('POST', url);
 
     request.headers.addAll({
       'Authorization': 'Bearer $token',
       'Accept': 'application/json',
     });
 
-    request.fields['_method'] =
-        'PUT'; // PENTING: Untuk Laravel API dengan method override
     request.fields['nama'] = product.nama;
     request.fields['kategori'] = product.kategori ?? '';
     request.fields['satuan'] = product.satuan ?? '';
     request.fields['stok'] = product.stok.toString();
     request.fields['harga_beli'] = product.harga_beli.toString();
     request.fields['harga_jual'] = product.harga_jual.toString();
-    // 'kode' tidak dikirim karena biasanya kode produk tidak bisa diubah setelah dibuat.
-    // Jika bisa diubah, tambahkan: request.fields['kode'] = product.kode;
 
-    // Hanya tambahkan gambar jika ada gambar baru yang dipilih (File)
     if (product.gambar != null) {
       request.files.add(
         await http.MultipartFile.fromPath(
@@ -410,9 +384,6 @@ class ApiService {
         ),
       );
     }
-    // Jika tidak ada gambar baru, dan Anda ingin menghapus gambar lama, mungkin butuh parameter khusus.
-    // Untuk saat ini, jika tidak ada product.gambar, gambar lama akan dipertahankan.
-
     try {
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
@@ -443,7 +414,6 @@ class ApiService {
     }
   }
 
-  // Metode BARU: Hapus Produk
   Future<void> deleteProduct(int productId) async {
     final String? token = _authService.authToken;
 

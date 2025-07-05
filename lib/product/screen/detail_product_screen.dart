@@ -106,7 +106,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           final snackBar = SnackBar(
             elevation: 0,
             behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.only(bottom: 700),
+            margin: const EdgeInsets.only(bottom: 650),
             backgroundColor: Colors.transparent,
             content: AwesomeSnackbarContent(
               title: 'Berhasil',
@@ -125,7 +125,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           final snackBar = SnackBar(
             elevation: 0,
             behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.only(bottom: 700),
+            margin: const EdgeInsets.only(bottom: 650),
             backgroundColor: Colors.transparent,
             content: AwesomeSnackbarContent(
               title: 'Vagal',
@@ -183,7 +183,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           final snackBar = SnackBar(
             elevation: 0,
             behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.only(bottom: 700),
+            margin: const EdgeInsets.only(bottom: 650),
             backgroundColor: Colors.transparent,
             content: AwesomeSnackbarContent(
               title: 'Berhasil',
@@ -202,7 +202,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           final snackBar = SnackBar(
             elevation: 0,
             behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.only(bottom: 700),
+            margin: const EdgeInsets.only(bottom: 650),
             backgroundColor: Colors.transparent,
             content: AwesomeSnackbarContent(
               title: 'Gagal',
@@ -230,7 +230,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Edit Produk' : 'Detail Produk'),
-        backgroundColor: Colors.brown[700],
+        backgroundColor: Colors.brown[650],
         actions: [
           if (!_isEditing) // Tampilkan tombol edit hanya jika tidak dalam mode edit
             IconButton(
@@ -292,7 +292,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         child: Icon(
                                           Icons.broken_image,
                                           size: 50,
-                                          color: Colors.brown[700],
+                                          color: Colors.brown[650],
                                         ),
                                       )),
                           if (_isEditing)

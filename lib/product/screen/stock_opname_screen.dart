@@ -315,7 +315,6 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
               maxLines: 3,
             ),
             const SizedBox(height: 16.0),
-            // Tanggal (hanya untuk UI, tidak dikirim ke API opname)
             TextField(
               controller: _dateController,
               readOnly: true,

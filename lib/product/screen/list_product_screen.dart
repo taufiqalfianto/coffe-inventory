@@ -174,15 +174,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                   );
                                 }
                               } else if (result is bool && result == true) {
-                                // Jika produk dihapus, muat ulang daftar produk
                                 await _loadProducts();
-                                if (mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Produk berhasil dihapus!'),
-                                    ),
-                                  );
-                                }
                               }
                             }
                           },
