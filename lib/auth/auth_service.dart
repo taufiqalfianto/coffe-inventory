@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  // Singleton instance
   static final AuthService _instance = AuthService._internal();
 
   factory AuthService() {
@@ -14,28 +13,27 @@ class AuthService {
 
   AuthService._internal();
 
-  static const String _baseUrl =
-      'https://backend-inventory.izzalutfi.com/api'; // Ganti dengan URL dasar API Anda
-  static const String _tokenKey =
-      'auth_token'; // Kunci untuk menyimpan token di SharedPreferences
+  static const String _baseUrl = 'https://backend-inventory.izzalutfi.com/api';
+  static const String _tokenKey = 'auth_token';
+  static const String _userNameKey = 'name';
 
-  String? _currentAuthToken; // Token yang disimpan di memori
+  String? _currentAuthToken;
+  String? _currentUserName;
 
-  // Inisialisasi token dari SharedPreferences saat aplikasi dimulai
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     _currentAuthToken = prefs.getString(_tokenKey);
+    _currentUserName = prefs.getString(_userNameKey);
     print(
-      'AuthService initialized. Token loaded: ${_currentAuthToken != null ? "Yes" : "No"}',
+      'AuthService initialized. Token loaded: ${_currentAuthToken != null ? "Yes" : "No"}, User Name: ${_currentUserName ?? "N/A"}',
     );
   }
 
-  // Getter untuk token yang bisa diakses oleh service lain (misalnya ApiService)
   String? get authToken => _currentAuthToken;
+  String? get userName => _currentUserName;
 
-  // --- Metode untuk Login ---
   Future<Map<String, dynamic>> login(String email, String password) async {
-    final url = Uri.parse('$_baseUrl/user/login'); //
+    final url = Uri.parse('$_baseUrl/user/login');
 
     try {
       final response = await http.post(
@@ -44,10 +42,7 @@ class AuthService {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
         },
-        body: {
-          'email': email, //
-          'password': password, //
-        },
+        body: {'email': email, 'password': password},
       );
 
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -55,15 +50,29 @@ class AuthService {
       if (response.statusCode == 200) {
         final String? token =
             responseData['token'] ?? responseData['access_token'];
+        final String? userName =
+            responseData['data']['name'] ?? responseData['user_name'];
 
         if (token != null) {
           await _saveToken(token);
           _currentAuthToken = token;
-          print('Login successful. Token saved and set.');
+
+          if (userName != null) {
+            await _saveUserName(userName);
+            _currentUserName = userName;
+          } else {
+            _currentUserName = null;
+            await _deleteUserName();
+          }
+
+          print(
+            'Login successful. Token saved, User Name: ${_currentUserName ?? "N/A"}.',
+          );
           return {
             'success': true,
             'message': 'Login Successful',
             'token': token,
+            'user_name': _currentUserName,
           };
         } else {
           print('Login failed: Token not found in response.');
@@ -83,27 +92,23 @@ class AuthService {
     }
   }
 
-  // --- Metode untuk Logout ---
   Future<void> logout() async {
     await _deleteToken();
+    await _deleteUserName();
     _currentAuthToken = null;
-    print('User logged out. Token cleared.');
+    _currentUserName = null;
+    print('User logged out. Token and User Name cleared.');
   }
 
-  // --- Metode Baru: Mengecek Status Otentikasi dan Validitas Token ---
   Future<bool> checkAuthStatus() async {
-    await init(); // Pastikan token sudah dimuat dari SharedPreferences
+    await init();
 
     if (_currentAuthToken == null) {
       print('No auth token found.');
-      return false; // Tidak ada token, berarti tidak login
+      return false;
     }
 
-    // Coba validasi token dengan memanggil API yang membutuhkan otentikasi
-    // Kita akan gunakan endpoint getProducts sebagai contoh validasi token
-    final url = Uri.parse(
-      '$_baseUrl/products',
-    ); // Menggunakan endpoint produk sebagai validasi
+    final url = Uri.parse('$_baseUrl/products');
     try {
       final response = await http.get(
         url,
@@ -114,31 +119,28 @@ class AuthService {
       );
 
       if (response.statusCode == 200) {
-        // Jika berhasil mendapatkan produk, berarti token masih valid
         print('Auth token is valid.');
+        // Opsional: Perbarui nama pengguna jika API produk mengembalikan data pengguna
+        // (Tapi lebih baik bergantung pada data login awal)
         return true;
       } else if (response.statusCode == 401) {
-        // Jika 401 Unauthorized, token tidak valid atau kadaluarsa
         print('Auth token is expired or invalid (401). Clearing token.');
-        await logout(); // Hapus token yang tidak valid
+        await logout();
         return false;
       } else {
-        // Status code lain menunjukkan ada masalah, tapi mungkin token masih "ada"
         print(
           'Auth token check resulted in status ${response.statusCode}. Assuming invalid for now.',
         );
-        await logout(); // Hapus token jika respons tidak sukses (selain 200)
+        await logout();
         return false;
       }
     } catch (e) {
-      // Ada error jaringan atau lainnya, anggap token tidak bisa divalidasi
       print('Error during auth token validation: $e. Clearing token.');
-      await logout(); // Hapus token jika ada error saat validasi
+      await logout();
       return false;
     }
   }
 
-  // --- Metode Private untuk Manajemen Token di SharedPreferences ---
   Future<void> _saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_tokenKey, token);
@@ -147,5 +149,15 @@ class AuthService {
   Future<void> _deleteToken() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_tokenKey);
+  }
+
+  Future<void> _saveUserName(String userName) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userNameKey, userName);
+  }
+
+  Future<void> _deleteUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_userNameKey);
   }
 }

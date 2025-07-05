@@ -1,5 +1,7 @@
 // lib/screens/stock_opname_screen.dart
 
+// ignore_for_file: unused_field
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
