@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:coffe_inventory/product/model/product_model.dart';
 import 'package:coffe_inventory/product/service/product_service.dart';
 import 'package:flutter/material.dart';
@@ -80,16 +81,38 @@ class _AddProductScreenState extends State<AddProductScreen> {
         if (mounted) {
           // Check if the widget is still mounted before showing SnackBar or popping
           if (addedProduct != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Product Added Successfully!')),
-            );
-            Navigator.pop(context, addedProduct); // Pass the added product back
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Failed to add product. Please try again.'),
+            const snackBar = SnackBar(
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              margin: EdgeInsets.only(bottom: 650),
+              backgroundColor: Colors.transparent,
+              content: AwesomeSnackbarContent(
+                title: 'Berhasil',
+                message: 'Produk Berhasil Ditambahkan.',
+                contentType: ContentType.success,
               ),
             );
+
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(snackBar);
+            Navigator.pop(context, addedProduct); // Pass the added product back
+          } else {
+            const snackBar = SnackBar(
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              margin: EdgeInsets.only(bottom: 650),
+              backgroundColor: Colors.transparent,
+              content: AwesomeSnackbarContent(
+                title: 'gagal',
+                message: 'Gagal Menambahkan Produk.',
+                contentType: ContentType.failure,
+              ),
+            );
+
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(snackBar);
           }
         }
       } catch (e) {
@@ -112,13 +135,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Product'),
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Tambah Daftar Produk',
+          style: TextStyle(color: Colors.brown),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.brown),
           onPressed: () {
             Navigator.of(context).pop();
           },
-        ), // Coffee-themed color
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

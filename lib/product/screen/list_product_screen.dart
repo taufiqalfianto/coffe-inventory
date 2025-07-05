@@ -1,5 +1,6 @@
 // lib/screens/product_list_screen.dart
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:coffe_inventory/auth/login.dart' show LoginScreen;
 import 'package:coffe_inventory/product/screen/detail_product_screen.dart';
 import 'package:coffe_inventory/product/screen/product_screen.dart';
@@ -268,13 +269,21 @@ class _ProductListScreenState extends State<ProductListScreen> {
           if (result != null && result is Product) {
             await _loadProducts();
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Produk "${result.nama}" berhasil ditambahkan!',
-                  ),
+              final snackBar = SnackBar(
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                margin: const EdgeInsets.only(bottom: 600),
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Berhasil',
+                  message: 'Produk ${result.nama} Berhasil Ditambahkan.',
+                  contentType: ContentType.success,
                 ),
               );
+
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(snackBar);
             }
           }
         },

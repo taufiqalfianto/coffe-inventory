@@ -1,6 +1,7 @@
 // lib/screens/product_detail_screen.dart
 
 import 'dart:io';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -102,19 +103,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
         final result = await _apiService.updateProduct(updatedProduct);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Produk "${result.nama}" berhasil diperbarui!'),
+          final snackBar = SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(bottom: 700),
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Berhasil',
+              message: 'Produk ${result.nama} berhasil diperbarui.',
+              contentType: ContentType.success,
             ),
           );
-          // Kembali ke ProductListScreen dan berikan produk yang diperbarui
+
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
           Navigator.pop(context, result);
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Gagal memperbarui produk: $e')),
+          final snackBar = SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(bottom: 700),
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Vagal',
+              message: 'Gagal Memperbarui Produk $e.',
+              contentType: ContentType.failure,
+            ),
           );
+
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
         }
       } finally {
         if (mounted) {
@@ -158,23 +180,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       try {
         await _apiService.deleteProduct(widget.product.id!);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Produk "${widget.product.nama}" berhasil dihapus!',
-              ),
+          final snackBar = SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(bottom: 700),
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Berhasil',
+              message: 'Produk ${widget.product.nama} berhasil dihapus.',
+              contentType: ContentType.success,
             ),
           );
-          Navigator.pop(
-            context,
-            true,
-          ); // Kembali dan beri sinyal bahwa produk telah dihapus
+
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+          Navigator.pop(context, true);
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Gagal menghapus produk: $e')));
+          final snackBar = SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(bottom: 700),
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Gagal',
+              message: 'Gagal Menghapus Produk. $e',
+              contentType: ContentType.failure,
+            ),
+          );
+
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
         }
       } finally {
         if (mounted) {
@@ -205,19 +244,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               },
               tooltip: 'Edit Produk',
             ),
-          if (_isEditing) // Tampilkan tombol hapus hanya jika dalam mode edit
+          if (_isEditing) 
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: _deleteProduct,
               tooltip: 'Hapus Produk',
-              color: Colors.redAccent, // Beri warna merah untuk indikasi bahaya
+              color: Colors.redAccent, 
             ),
-          if (_isEditing) // Tampilkan tombol simpan hanya jika dalam mode edit
+          if (_isEditing) 
             IconButton(
               icon: const Icon(Icons.save),
               onPressed: _isLoading
                   ? null
-                  : _updateProduct, // Nonaktifkan saat loading
+                  : _updateProduct, 
               tooltip: 'Simpan Perubahan',
             ),
         ],

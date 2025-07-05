@@ -1,5 +1,6 @@
 // lib/screens/stock_opname_screen.dart
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -119,16 +120,40 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
 
   Future<void> _performStockOpname() async {
     if (_selectedProduct == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih nama produk terlebih dahulu.')),
+      const snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(bottom: 00),
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Gagal',
+          message: 'Pilih Produk Terlebih Dahulu.',
+          contentType: ContentType.failure,
+        ),
       );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
       return;
     }
     if (_physicalStockController.text.isEmpty ||
         int.tryParse(_physicalStockController.text) == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Masukkan stok fisik yang valid.')),
+      const snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(bottom: 650),
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Gagal',
+          message: 'Masukkan Stok Fisik Yang Valid.',
+          contentType: ContentType.failure,
+        ),
       );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
       return;
     }
 
@@ -137,9 +162,21 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
         ? _keteranganController.text
         : '-';
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Melakukan Stock Opname...')));
+    const snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(bottom: 650),
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Loading',
+        message: 'Proses Stok Opname.',
+        contentType: ContentType.help,
+      ),
+    );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
 
     try {
       await _apiService.stockOpname(
@@ -148,18 +185,41 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
         keterangan,
       );
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Stock Opname berhasil!')));
-        // Clear form
+        const snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(bottom: 650),
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Berhasil',
+            message: 'Stok Opname Berhasil Ditambahkan.',
+            contentType: ContentType.success,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
         _physicalStockController.clear();
         _keteranganController.clear();
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Gagal Stock Opname: $e')));
+        const snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(bottom: 650),
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Gagal',
+            message: 'Stok Opname Gagal Ditambahkan.',
+            contentType: ContentType.failure,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
       }
     }
   }
