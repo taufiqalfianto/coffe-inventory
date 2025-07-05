@@ -168,9 +168,14 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stok Opname'),
+        backgroundColor: Colors.white,
+
+        title: const Text(
+          'Stock Opname',
+          style: TextStyle(color: Colors.brown),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.brown),
           onPressed: () {
             Navigator.of(context).pop();
           },

@@ -78,9 +78,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Daftar Produk'),
+        backgroundColor: Colors.white,
+
+        title: const Text(
+          'Daftar Produk',
+          style: TextStyle(color: Colors.brown),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.brown),
           onPressed: () {
             Navigator.of(context).pop();
           },
