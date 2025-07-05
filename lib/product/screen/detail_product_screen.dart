@@ -230,7 +230,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Edit Produk' : 'Detail Produk'),
-        backgroundColor: Colors.brown[650],
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF111111), Color(0xFF313131)],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+          ),
+        ),
         actions: [
           if (!_isEditing) // Tampilkan tombol edit hanya jika tidak dalam mode edit
             IconButton(
@@ -244,23 +252,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               },
               tooltip: 'Edit Produk',
             ),
-          if (_isEditing) 
+          if (_isEditing)
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: _deleteProduct,
               tooltip: 'Hapus Produk',
-              color: Colors.redAccent, 
+              color: Colors.redAccent,
             ),
-          if (_isEditing) 
+          if (_isEditing)
             IconButton(
               icon: const Icon(Icons.save),
-              onPressed: _isLoading
-                  ? null
-                  : _updateProduct, 
+              onPressed: _isLoading ? null : _updateProduct,
               tooltip: 'Simpan Perubahan',
             ),
         ],
       ),
+      backgroundColor: Color(0xFF111111),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: Colors.brown))
           : SingleChildScrollView(
@@ -410,11 +417,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       controller: controller,
       keyboardType: keyboardType,
       enabled: enabled,
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: labelText,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        labelStyle: const TextStyle(color: Colors.white),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.white),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.white),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.white, width: 2),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.white54),
+        ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: Colors.transparent,
+        suffixIcon: enabled
+            ? const Icon(Icons.edit, color: Colors.white)
+            : null,
       ),
       validator: validator,
     );

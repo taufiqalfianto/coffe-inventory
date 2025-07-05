@@ -1,7 +1,7 @@
 import 'package:coffe_inventory/auth/auth_service.dart';
 import 'package:coffe_inventory/menu_widget.dart';
 import 'package:coffe_inventory/product/screen/list_product_screen.dart';
-import 'package:coffe_inventory/product/screen/product_screen.dart';
+import 'package:coffe_inventory/product/screen/add_product_screen.dart';
 import 'package:coffe_inventory/product/screen/stock_inout_screen.dart';
 import 'package:coffe_inventory/product/screen/stock_opname_screen.dart';
 import 'package:flutter/material.dart';

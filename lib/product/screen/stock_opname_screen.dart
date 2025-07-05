@@ -230,19 +230,27 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF111111), Color(0xFF313131)],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+          ),
+        ),
         title: const Text(
           'Stock Opname',
-          style: TextStyle(color: Colors.brown),
+          style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.brown),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
       ),
+      backgroundColor: Color(0xFF111111),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
         child: Column(
@@ -290,36 +298,63 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
             TextField(
               controller: _physicalStockController,
               keyboardType: TextInputType.number,
+              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Stok Fisik',
+                labelStyle: const TextStyle(color: Colors.white),
                 hintText: 'Masukkan jumlah stok fisik',
+                hintStyle: const TextStyle(color: Colors.white70),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white, width: 2),
                 ),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Colors.transparent,
               ),
+              cursorColor: Colors.white,
             ),
             const SizedBox(height: 16.0),
             // Keterangan
             TextField(
               controller: _keteranganController,
               keyboardType: TextInputType.text,
+              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Keterangan',
+                labelStyle: const TextStyle(color: Colors.white),
                 hintText: 'Opsional: masukkan keterangan',
+                hintStyle: const TextStyle(color: Colors.white70),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white, width: 2),
                 ),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Colors.transparent,
               ),
               maxLines: 3,
+              cursorColor: Colors.white,
             ),
             const SizedBox(height: 16.0),
             TextField(
               controller: _dateController,
               readOnly: true,
+              style: const TextStyle(color: Colors.white),
               onTap: () => _selectDate(
                 context,
                 _dateController,
@@ -327,13 +362,27 @@ class _StockOpnameScreenState extends State<StockOpnameScreen> {
               ),
               decoration: InputDecoration(
                 labelText: 'Tanggal',
+                labelStyle: const TextStyle(color: Colors.white),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.white, width: 2),
                 ),
                 filled: true,
-                fillColor: Colors.white,
-                suffixIcon: const Icon(Icons.calendar_today),
+                fillColor: Colors.transparent,
+                suffixIcon: const Icon(
+                  Icons.calendar_today,
+                  color: Colors.white,
+                ),
               ),
+              cursorColor: Colors.white,
             ),
             const SizedBox(height: 32.0),
             ElevatedButton(

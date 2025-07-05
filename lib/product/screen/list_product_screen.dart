@@ -3,7 +3,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:coffe_inventory/auth/login.dart' show LoginScreen;
 import 'package:coffe_inventory/product/screen/detail_product_screen.dart';
-import 'package:coffe_inventory/product/screen/product_screen.dart';
+import 'package:coffe_inventory/product/screen/add_product_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../auth/auth_service.dart';
@@ -79,19 +79,28 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-
         title: const Text(
           'Daftar Produk',
-          style: TextStyle(color: Colors.brown),
+          style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.brown),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF111111), Color(0xFF313131)],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+          ),
+        ),
       ),
+      backgroundColor: Color(0xFF111111),
       body: _isLoadingProducts
           ? const Center(child: CircularProgressIndicator(color: Colors.brown))
           : _errorMessage != null
@@ -183,17 +192,24 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             children: [
                               product.imageUrl != null &&
                                       product.imageUrl!.isNotEmpty
-                                  ? Image.network(
-                                      product.imageUrl!,
-                                      fit: BoxFit.fill,
-                                      scale: 1,
+                                  ? Container(
+                                      width: 180,
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            product.imageUrl!,
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
                                     )
-                                  : const CircleAvatar(
-                                      backgroundColor: Colors.brown,
-                                      radius: 30,
-                                      child: Icon(
-                                        Icons.local_cafe,
-                                        color: Colors.white,
+                                  : Container(
+                                      width: 180,
+                                      height: 200,
+                                      child: Center(
+                                        child: Text('Gambar Tidak Ada'),
                                       ),
                                     ),
                               const SizedBox(height: 8),
@@ -245,42 +261,44 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 ),
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Navigasi ke AddProductScreen
-          // Asumsi AddProductScreen ada di path ini
-          // coffe_inventory/product/screen/product_screen.dart (dari import)
-          // Jika tidak, ganti dengan path yang benar
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AddProductScreen(),
-            ), // Menggunakan AddProductScreen
-          );
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        width: 180,
+        height: 48,
+        child: FloatingActionButton.extended(
+          onPressed: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddProductScreen()),
+            );
 
-          if (result != null && result is Product) {
-            await _loadProducts();
-            if (mounted) {
-              final snackBar = SnackBar(
-                elevation: 0,
-                behavior: SnackBarBehavior.floating,
-                margin: const EdgeInsets.only(bottom: 600),
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Berhasil',
-                  message: 'Produk ${result.nama} Berhasil Ditambahkan.',
-                  contentType: ContentType.success,
-                ),
-              );
+            if (result != null && result is Product) {
+              await _loadProducts();
+              if (mounted) {
+                final snackBar = SnackBar(
+                  elevation: 0,
+                  behavior: SnackBarBehavior.floating,
+                  margin: const EdgeInsets.only(bottom: 600),
+                  backgroundColor: Colors.transparent,
+                  content: AwesomeSnackbarContent(
+                    title: 'Berhasil',
+                    message: 'Produk ${result.nama} Berhasil Ditambahkan.',
+                    contentType: ContentType.success,
+                  ),
+                );
 
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(snackBar);
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(snackBar);
+              }
             }
-          }
-        },
-        backgroundColor: Colors.brown,
-        child: const Icon(Icons.add, color: Colors.white),
+          },
+          backgroundColor: Colors.brown,
+          label: const Text(
+            "Tambah Produk",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
       ),
     );
   }

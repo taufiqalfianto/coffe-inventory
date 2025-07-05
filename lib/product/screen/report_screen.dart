@@ -58,17 +58,26 @@ class _StockReportScreenState extends State<StockReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Laporan', style: TextStyle(color: Colors.brown)),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF111111), Color(0xFF313131)],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+          ),
+        ),
+        title: const Text('Laporan', style: TextStyle(color: Colors.white)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.brown),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
       ),
+      backgroundColor: Color(0xFF111111),
       body: _isLoadingReport
-          ? const Center(child: CircularProgressIndicator(color: Colors.brown))
+          ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : _errorMessage != null
           ? Center(
               child: Padding(

@@ -135,18 +135,28 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: const Text(
-          'Tambah Daftar Produk',
-          style: TextStyle(color: Colors.brown),
+          'Daftar Produk',
+          style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.brown),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF111111), Color(0xFF313131)],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+          ),
+        ),
       ),
+      backgroundColor: Color(0xFF111111),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -156,7 +166,26 @@ class _AddProductScreenState extends State<AddProductScreen> {
               // Kode
               TextFormField(
                 controller: _kodeController,
-                decoration: _inputDecoration('Kode Produk', Icons.vpn_key),
+                style: const TextStyle(color: Colors.white),
+                decoration: _inputDecoration('Kode Produk', Icons.vpn_key)
+                    .copyWith(
+                      labelStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(
+                        Icons.vpn_key,
+                        color: Colors.white,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                    ),
                 validator: (value) => value == null || value.isEmpty
                     ? 'Mohon masukkan kode produk'
                     : null,
@@ -165,7 +194,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
               // Nama
               TextFormField(
                 controller: _namaController,
-                decoration: _inputDecoration('Nama Produk', Icons.coffee),
+                style: const TextStyle(color: Colors.white),
+                decoration: _inputDecoration('Nama Produk', Icons.coffee)
+                    .copyWith(
+                      labelStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(Icons.coffee, color: Colors.white),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                    ),
                 validator: (value) => value == null || value.isEmpty
                     ? 'Mohon masukkan nama produk'
                     : null,
@@ -174,7 +219,26 @@ class _AddProductScreenState extends State<AddProductScreen> {
               // Kategori
               TextFormField(
                 controller: _kategoriController,
-                decoration: _inputDecoration('Kategori', Icons.category),
+                style: const TextStyle(color: Colors.white),
+                decoration: _inputDecoration('Kategori', Icons.category)
+                    .copyWith(
+                      labelStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(
+                        Icons.category,
+                        color: Colors.white,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                    ),
                 validator: (value) => value == null || value.isEmpty
                     ? 'Mohon masukkan kategori'
                     : null,
@@ -183,7 +247,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
               // Satuan
               TextFormField(
                 controller: _satuanController,
-                decoration: _inputDecoration('Satuan', Icons.edit),
+                style: const TextStyle(color: Colors.white),
+                decoration: _inputDecoration('Satuan', Icons.edit).copyWith(
+                  labelStyle: const TextStyle(color: Colors.white),
+                  prefixIcon: const Icon(Icons.edit, color: Colors.white),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.white, width: 2),
+                  ),
+                ),
                 validator: (value) => value == null || value.isEmpty
                     ? 'Mohon masukkan satuan produk'
                     : null,
@@ -192,7 +268,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
               // Stok
               TextFormField(
                 controller: _stokController,
-                decoration: _inputDecoration('Stok', Icons.inventory),
+                style: const TextStyle(color: Colors.white),
+                decoration: _inputDecoration('Stok', Icons.inventory).copyWith(
+                  labelStyle: const TextStyle(color: Colors.white),
+                  prefixIcon: const Icon(Icons.inventory, color: Colors.white),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.white, width: 2),
+                  ),
+                ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty)
@@ -207,10 +295,29 @@ class _AddProductScreenState extends State<AddProductScreen> {
               // Harga Beli
               TextFormField(
                 controller: _hargaBeliController,
-                decoration: _inputDecoration(
-                  'Harga Beli',
-                  Icons.monetization_on,
-                ),
+                style: const TextStyle(color: Colors.white),
+                decoration:
+                    _inputDecoration(
+                      'Harga Beli',
+                      Icons.monetization_on,
+                    ).copyWith(
+                      labelStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(
+                        Icons.monetization_on,
+                        color: Colors.white,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                    ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty)
@@ -226,7 +333,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
               // Harga Jual
               TextFormField(
                 controller: _hargaJualController,
-                decoration: _inputDecoration('Harga Jual', Icons.sell),
+                style: const TextStyle(color: Colors.white),
+                decoration: _inputDecoration('Harga Jual', Icons.sell).copyWith(
+                  labelStyle: const TextStyle(color: Colors.white),
+                  prefixIcon: const Icon(Icons.sell, color: Colors.white),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.white, width: 2),
+                  ),
+                ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty)

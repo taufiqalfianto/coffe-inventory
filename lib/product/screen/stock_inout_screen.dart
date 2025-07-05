@@ -368,51 +368,64 @@ class _StockInOutScreenState extends State<StockInOutScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-
-        title: const Text(
-          'Stock In/Out',
-          style: TextStyle(color: Colors.brown),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.brown),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Container(
-            margin: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
-            ), // Margin untuk TabBar
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(120.0),
+        child: AppBar(
+          title: const Text(
+            'Stock In/Out',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: TabBar(
-              controller: _tabController,
-              labelColor: Colors.white,
-              unselectedLabelColor:
-                  Colors.brown, // Warna teks untuk tab tidak terpilih
-              indicatorSize: TabBarIndicatorSize
-                  .tab, // Membuat indicator mengisi seluruh tab
-              indicator: BoxDecoration(
-                color: Colors
-                    .brown[800], // Warna background untuk tab yang terpilih
-                borderRadius: BorderRadius.circular(
-                  20.0,
-                ), // Sudut membulat untuk tab yang terpilih
+              gradient: LinearGradient(
+                colors: [Color(0xFF111111), Color(0xFF313131)],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
               ),
-              tabs: const [
-                Tab(text: 'In'),
-                Tab(text: 'Out'),
-              ],
+            ),
+          ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ), // Margin untuk TabBar
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: TabBar(
+                dividerHeight: 0,
+                controller: _tabController,
+                labelColor: Colors.brown,
+                unselectedLabelColor:
+                    Colors.white, // Warna teks untuk tab tidak terpilih
+                indicatorSize: TabBarIndicatorSize
+                    .tab, // Membuat indicator mengisi seluruh tab
+                indicator: BoxDecoration(
+                  color:
+                      Colors.white, // Warna background untuk tab yang terpilih
+                  borderRadius: BorderRadius.circular(
+                    20.0,
+                  ), // Sudut membulat untuk tab yang terpilih
+                ),
+                tabs: const [
+                  Tab(text: 'In', height: 48),
+                  Tab(text: 'Out', height: 48),
+                ],
+              ),
             ),
           ),
         ),
       ),
+      backgroundColor: Color(0xFF111111),
       body: TabBarView(
         controller: _tabController,
         children: [_buildStockInForm(), _buildStockOutForm()],
@@ -471,37 +484,64 @@ class _StockInOutScreenState extends State<StockInOutScreen>
           TextField(
             controller: _quantityInController,
             keyboardType: TextInputType.number,
+            style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               labelText: 'Quantity',
+              labelStyle: const TextStyle(color: Colors.white),
               hintText: 'Masukkan jumlah',
+              hintStyle: const TextStyle(color: Colors.white70),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white, width: 2),
               ),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Colors.transparent,
             ),
+            cursorColor: Colors.white,
           ),
           const SizedBox(height: 16.0),
           // Keterangan
           TextField(
             controller: _keteranganInController,
             keyboardType: TextInputType.text,
+            style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               labelText: 'Keterangan',
+              labelStyle: const TextStyle(color: Colors.white),
               hintText: 'Opsional: masukkan keterangan',
+              hintStyle: const TextStyle(color: Colors.white70),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white, width: 2),
               ),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Colors.transparent,
             ),
             maxLines: 3,
+            cursorColor: Colors.white,
           ),
           const SizedBox(height: 16.0),
           // Tanggal
           TextField(
             controller: _dateInController,
             readOnly: true,
+            style: const TextStyle(color: Colors.white),
             onTap: () => _selectDate(
               context,
               _dateInController,
@@ -509,13 +549,24 @@ class _StockInOutScreenState extends State<StockInOutScreen>
             ),
             decoration: InputDecoration(
               labelText: 'Tanggal',
+              labelStyle: const TextStyle(color: Colors.white),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white, width: 2),
               ),
               filled: true,
-              fillColor: Colors.white,
-              suffixIcon: const Icon(Icons.calendar_today),
+              fillColor: Colors.transparent,
+              suffixIcon: const Icon(Icons.calendar_today, color: Colors.white),
             ),
+            cursorColor: Colors.white,
           ),
           const SizedBox(height: 32.0),
           ElevatedButton(
@@ -541,7 +592,7 @@ class _StockInOutScreenState extends State<StockInOutScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Nama Produk (Dropdown)
+          SizedBox(height: 48),
           _isLoadingProducts
               ? const Center(
                   child: CircularProgressIndicator(color: Colors.brown),
@@ -586,37 +637,64 @@ class _StockInOutScreenState extends State<StockInOutScreen>
           TextField(
             controller: _quantityOutController,
             keyboardType: TextInputType.number,
+            style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               labelText: 'Quantity',
+              labelStyle: const TextStyle(color: Colors.white),
               hintText: 'Masukkan jumlah',
+              hintStyle: const TextStyle(color: Colors.white70),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white, width: 2),
               ),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Colors.transparent,
             ),
+            cursorColor: Colors.white,
           ),
           const SizedBox(height: 16.0),
           // Keterangan
           TextField(
             controller: _keteranganOutController,
             keyboardType: TextInputType.text,
+            style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               labelText: 'Keterangan',
+              labelStyle: const TextStyle(color: Colors.white),
               hintText: 'Opsional: masukkan keterangan',
+              hintStyle: const TextStyle(color: Colors.white70),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white, width: 2),
               ),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Colors.transparent,
             ),
             maxLines: 3,
+            cursorColor: Colors.white,
           ),
           const SizedBox(height: 16.0),
           // Tanggal
           TextField(
             controller: _dateOutController,
             readOnly: true,
+            style: const TextStyle(color: Colors.white),
             onTap: () => _selectDate(
               context,
               _dateOutController,
@@ -624,13 +702,24 @@ class _StockInOutScreenState extends State<StockInOutScreen>
             ),
             decoration: InputDecoration(
               labelText: 'Tanggal',
+              labelStyle: const TextStyle(color: Colors.white),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.white, width: 2),
               ),
               filled: true,
-              fillColor: Colors.white,
-              suffixIcon: const Icon(Icons.calendar_today),
+              fillColor: Colors.transparent,
+              suffixIcon: const Icon(Icons.calendar_today, color: Colors.white),
             ),
+            cursorColor: Colors.white,
           ),
           const SizedBox(height: 32.0),
           ElevatedButton(
