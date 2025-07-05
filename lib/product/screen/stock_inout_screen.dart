@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:coffe_inventory/product/model/product_model.dart';
 import 'package:coffe_inventory/product/service/product_service.dart';
 import 'package:flutter/material.dart';
@@ -139,19 +140,41 @@ class _StockInOutScreenState extends State<StockInOutScreen>
 
   Future<void> _performStockIn() async {
     if (_selectedProductIn == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih nama produk terlebih dahulu.')),
+      const snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(bottom: 700),
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Gagal',
+          message: 'Pilih nama produk terlebih dahulu.',
+          contentType: ContentType.failure,
+        ),
       );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
       return;
     }
     if (_quantityInController.text.isEmpty ||
         int.tryParse(_quantityInController.text) == null ||
         int.parse(_quantityInController.text) <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Masukkan jumlah yang valid (lebih dari 0).'),
+      const snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(bottom: 700),
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Gagal',
+          message: 'Masukkan jumlah yang valid (lebih dari 0).',
+          contentType: ContentType.failure,
         ),
       );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
       return;
     }
 
@@ -160,27 +183,61 @@ class _StockInOutScreenState extends State<StockInOutScreen>
         ? _keteranganInController.text
         : '-';
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Melakukan Stock In...')));
+    const snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(bottom: 700),
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Loading',
+        message: 'Proses Stock in.',
+        contentType: ContentType.help,
+      ),
+    );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
 
     try {
       await _apiService.stockIn(_selectedProductIn!.id!, quantity, keterangan);
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Stock In berhasil!')));
+        const snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(bottom: 700),
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'erhasil',
+            message: 'Proses Stock In Berhasil.',
+            contentType: ContentType.success,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
         // Clear form
         _quantityInController.clear();
         _keteranganInController.clear();
-        // Anda mungkin ingin memuat ulang daftar produk jika stok ditampilkan di tempat lain
-        // atau memperbarui stok di _selectedProductIn secara lokal.
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Gagal Stock In: $e')));
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(bottom: 700),
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Gagal',
+            message: 'Proses Stock In Gagal $e .',
+            contentType: ContentType.failure,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
       }
     }
   }
@@ -188,19 +245,43 @@ class _StockInOutScreenState extends State<StockInOutScreen>
   // --- Fungsi untuk Melakukan Stock Out ---
   Future<void> _performStockOut() async {
     if (_selectedProductOut == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pilih nama produk terlebih dahulu.')),
+      const snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'On Snap!',
+          message: 'Pilih nama produk terlebih dahulu.',
+
+          contentType: ContentType.failure,
+        ),
       );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+
       return;
     }
     if (_quantityOutController.text.isEmpty ||
         int.tryParse(_quantityOutController.text) == null ||
         int.parse(_quantityOutController.text) <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Masukkan jumlah yang valid (lebih dari 0).'),
+      const snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(bottom: 700),
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Gagal',
+          message: 'Masukkan jumlah yang valid (lebih dari 0).',
+          contentType: ContentType.failure,
         ),
       );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+
       return;
     }
 
@@ -209,9 +290,21 @@ class _StockInOutScreenState extends State<StockInOutScreen>
         ? _keteranganOutController.text
         : '-';
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Melakukan Stock Out...')));
+    const snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(bottom: 700),
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Loading',
+        message: 'Melakukan Stock Out...',
+        contentType: ContentType.help,
+      ),
+    );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
 
     try {
       await _apiService.stockOut(
@@ -220,18 +313,42 @@ class _StockInOutScreenState extends State<StockInOutScreen>
         keterangan,
       );
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Stock Out berhasil!')));
-        // Clear form
+        const snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(bottom: 700),
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Berhasil',
+            message: 'Proses Stock Out Berhasil.',
+            contentType: ContentType.success,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
         _quantityOutController.clear();
         _keteranganOutController.clear();
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Gagal Stock Out: $e')));
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(bottom: 700),
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Gagal',
+            message: 'Proses Stock Out $e .',
+            contentType: ContentType.failure,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
       }
     }
   }
@@ -240,9 +357,14 @@ class _StockInOutScreenState extends State<StockInOutScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stock In/Out'),
+        backgroundColor: Colors.white,
+
+        title: const Text(
+          'Stock In/Out',
+          style: TextStyle(color: Colors.brown),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.brown),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -255,9 +377,7 @@ class _StockInOutScreenState extends State<StockInOutScreen>
               vertical: 8.0,
             ), // Margin untuk TabBar
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                10.0,
-              ), // Sudut membulat untuk TabBar
+              borderRadius: BorderRadius.circular(10.0),
             ),
             child: TabBar(
               controller: _tabController,
@@ -290,7 +410,7 @@ class _StockInOutScreenState extends State<StockInOutScreen>
 
   Widget _buildStockInForm() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
